@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         
         // Создали модуль, который вернул viewController
-        let mainVC = ModuleBuilder.createModule()
+        let mainVC = ModuleBuilder.createMainModule()
         
         // Создаем NavigationController. Root контроллером является созданый mainVC
         let navBar = UINavigationController(rootViewController: mainVC)

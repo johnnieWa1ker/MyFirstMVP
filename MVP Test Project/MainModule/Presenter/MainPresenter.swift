@@ -13,37 +13,36 @@ import Foundation
 protocol MainViewProtocol: class {
     
     // Эти методы будут вызваны во view
-    // TODO: QUESTION
-    // как именно происходит инжектирование данных из презентера?
+    // MARK: Получается, что эти функции выполнятся в презентере, а view только получит об этом информацию и сама как-то отреагирует?
     func success()
     func failure(error: Error)
 }
 
 // Протокол презентера указывает с каким view и networkService следует работать презентеру
 protocol MainViewPresenterProtocol: class {
-    init(view: MainViewProtocol, networkservise: NetworkServiceProtocol)
+    init(view: MainViewProtocol, networkService: NetworkServiceProtocol)
     
     func getUsers()
     var users: [User]? { get set }
 }
 
-class Presenter: MainViewPresenterProtocol {
+class MainPresenter: MainViewPresenterProtocol {
     
     // Презентер формирует сильную ссылку на view. Что бы избежать утечек памяти, следует сделать слабую ссылку на view
     weak var view: MainViewProtocol?
+    let networkService: NetworkServiceProtocol!
     var users: [User]?
-    let networkservise: NetworkServiceProtocol!
     
-    required init(view: MainViewProtocol, networkservise: NetworkServiceProtocol) {
+    required init(view: MainViewProtocol, networkService: NetworkServiceProtocol) {
         self.view = view
-        self.networkservise = networkservise
+        self.networkService = networkService
         getUsers()
     }
     
     func getUsers() {
         
         // Презентер обращается к сервисному слою, что бы тот "дернул" метод getUser и вернул данные
-        networkservise.getUser { [weak self] result in
+        networkService.getUser { [weak self] result in
             guard let self = self else { return }
             
             // Работа с сетью должна происходить асинхронно

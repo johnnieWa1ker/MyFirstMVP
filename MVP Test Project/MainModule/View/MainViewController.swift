@@ -14,8 +14,8 @@ class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
 
-    // Объявляем презентер, который будет управлять данной view
-    var presenter: Presenter!
+    // Объявляем презентер, который будет инжектирован извне - из ModuleBulder
+    var presenter: MainPresenter!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +40,16 @@ extension MainViewController: UITableViewDataSource {
         let user = presenter.users?[indexPath.row]
         cell.textLabel?.text  = user?.name // Отображаю только имена пользователей
         return cell
+    }
+}
+
+//
+// MARK: Как работать с делегатами, если на странице несколько таблиц?
+extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = presenter.users?[indexPath.row]
+        let detailViewController = ModuleBuilder.createDetailModule(user: user!)
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
 
