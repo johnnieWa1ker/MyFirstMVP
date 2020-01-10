@@ -41,10 +41,15 @@ class Presenter: MainViewPresenterProtocol {
     }
     
     func getUsers() {
+        
+        // Презентер обращается к сервисному слою, что бы тот "дернул" метод getUser и вернул данные
         networkservise.getUser { [weak self] result in
             guard let self = self else { return }
             
+            // Работа с сетью должна происходить асинхронно
             DispatchQueue.main.async {
+                
+                // В зависимости от результата 
                 switch result {
                 case .success(let users):
                     self.users = users

@@ -15,9 +15,13 @@ protocol Builder {
 
 class ModuleBuilder: Builder {
     static func createModule() -> UIViewController {
+        
+        // Берем экземпляр сетевого слоя, который будет подготавливать данные для view
         let networkService = NetworkService()
+        
         // Берем view которая будет "собираться"
         let view = MainViewController()
+        
         // Берем презентер который будет отвечать за логику во view
         let presenter = Presenter(view: view, networkservise: networkService)
         

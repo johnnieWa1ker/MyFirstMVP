@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Структура составлена на основании данных из https://jsonplaceholder.typicode.com/users
+
 struct User: Decodable {
     let id: Int
     let name: String

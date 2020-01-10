@@ -13,38 +13,45 @@ class MainViewController: UIViewController {
     // MARK: IBOutlet
     @IBOutlet weak var tableView: UITableView!
     
+
+    // Объявляем презентер, который будет управлять данной view
     var presenter: Presenter!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Регистриуем таблицу при загрузке view. Далее в идентификатор с этим же именем будет загружаться соответствующая информация
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     }
 }
 
+// View должна соответствовать протоколу UITableViewDataSource, для того, что бы была возможность работы с компоненом "таблица"
 extension MainViewController: UITableViewDataSource {
+    
+    // Функция определяет количество ячеек, которые должна содержать таблица
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.users?.count ?? 0
+        return presenter.users?.count ?? 0 // Количество ячеет равно количеству записей, полученных из сети
     }
     
+    // Определяем содержимое ячеек
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
         let user = presenter.users?[indexPath.row]
-        cell.textLabel?.text  = user?.name
+        cell.textLabel?.text  = user?.name // Отображаю только имена пользователей
         return cell
     }
-    
-    
 }
 
-// Так как презентер требует конкретный тип объекта себе "на вход", то что бы связаться с этим view, нужно, что бы view соответствовала этому типу. Реализация возможна как через использование расширений, так и при объявлении класса
+// "Учим" view работать через презентер
 extension MainViewController: MainViewProtocol {
 
-    // Функции из MainViewProtocol предназначены как бы для вывода данных во view
+    // При срабатывании функции в презентере, описываем, что требуется сделать во view
     func success() {
         tableView.reloadData()
     }
     
+    // При срабатывании функции в презентере, описываем, что требуется сделать во view
     func failure(error: Error) {
         print(error.localizedDescription)
     }
